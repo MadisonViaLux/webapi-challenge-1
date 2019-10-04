@@ -2,14 +2,14 @@ const db = require('../dbConfig.js');
 const mappers = require('./mappers');
 
 module.exports = {
-  get,
+  find,
   insert,
   update,
   remove,
   getProjectActions,
 };
 
-function get(id) {
+function find(id) {
   let query = db('projects as p');
 
   if (id) {
@@ -38,14 +38,14 @@ function get(id) {
 function insert(project) {
   return db('projects')
     .insert(project)
-    .then(([id]) => this.get(id));
+    .then(([id]) => this.find(id));
 }
 
 function update(id, changes) {
   return db('projects')
     .where('id', id)
     .update(changes)
-    .then(count => (count > 0 ? this.get(id) : null));
+    .then(count => (count > 0 ? this.find(id) : null));
 }
 
 function remove(id) {

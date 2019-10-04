@@ -43,5 +43,40 @@ router.post('/', (req, res) => {
 })
 
 
+router.delete('/:id', (req, res) => {
+    const { id } = req.params
+
+    pj.remove(id)
+        .then(pro => {
+            if(!id){
+                return console.log(res.status(404).json({ message: "The project with the specified ID does not exist." }))
+            } else {
+                return console.log(res.status(200).json(pro))
+            }
+        })
+        .catch(err => res.status(500).json({ error: "The project could not be removed" }))
+})
+
+
+router.put('/:id', (req, res) => {
+    const { id } = req.params
+    const changes = req.body
+
+    if(!id){
+        return console.log(res.status(404).json({ message: "The project with the specified ID does not exist." }))
+    } else if(!changes.name && !changes.description){
+        return console.log(res.status(400).json({ errorMessage: "Please provide name and description for the project." }))
+    } else {
+        pj.update(id, changes)
+            .then(update => res.status(200).json(update))
+            .catch( error => {
+                res.status(500).json({ error: "The project information could not be modified." })
+            })
+    }
+}) 
+
+
+
+
 
 module.exports = router
